@@ -30,6 +30,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+	background-color: #FFFFF8;
 }
 ol, ul {
 	list-style: none;
@@ -95,7 +96,7 @@ nav li {
 	font-size: 1.2em;
 }
 
-li:hover {
+.lien-header:hover {
 	color: #B1663C;
 }
 #introduction {
@@ -183,6 +184,14 @@ input[type="submit"]{
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
-	margin: 2em
+	margin: 2em;
 }
 
+.mdp{
+	color: black;
+}
+
+.lien-header{
+	text-decoration: none;
+	color: black;
+}
