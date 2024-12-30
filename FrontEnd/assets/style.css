@@ -96,7 +96,7 @@ nav li {
 	font-size: 1.2em;
 }
 
-.lien-header:hover {
+.lien-header:hover, .lien-header-gras{
 	color: #B1663C;
 }
 #introduction {
@@ -192,6 +192,36 @@ footer nav ul {
 }
 
 .lien-header{
+	font-weight: 100;
 	text-decoration: none;
 	color: black;
+}
+
+.lien-header-gras{
+	font-weight: 900;
+	text-decoration: none;
+	color: black;
+}
+
+.categorie-div{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	gap: 10px;
+	margin: 50px;
+	flex-wrap: wrap;
+}
+
+.categorie-div > *{
+	font-family: 'Syne';
+	border:1px solid #1D6154;
+	border-radius: 60px;
+	padding: 8px 13px 8px 13px;
+	color: #1D6154;
+	cursor: pointer;
+}
+
+.categorie-div > *:hover{
+	color: white;
+	background-color: #1D6154;
 }
