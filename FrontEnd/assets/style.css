@@ -225,3 +225,13 @@ footer nav ul {
 	color: white;
 	background-color: #1D6154;
 }
+
+.error{
+	display: flex;
+	justify-content: center;
+	color: white;
+	background-color: #8d0404;
+	padding: 15px;
+	border-radius: 5px;
+	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
+}
