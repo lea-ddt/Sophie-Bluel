@@ -260,6 +260,90 @@ footer nav ul {
 	margin: 100px 0 70px 0;
 }
 
-.projets-edition a{
+.projets-edition button{
+	border: none;
+	background-color: #FFFFF8;
+	cursor: pointer;
+}
+
+.projets-edition button:hover{
+	text-decoration: underline;
+}
+
+.fa-regular{
+    padding-right: 6px;
+}
+
+.modal-container{
+	display: none;
+	position: fixed;
+	top: 0;
+	width: 100vw;
+	height: 100vh;
+}
+
+.modal-container.active{
+	display: block;
+}
+
+.overlay{
+	position: fixed;
+	width: 100vw;
+	height: 100vh;
+	background-color: rgba(0, 0, 0, 0.3);
+	top: 0;
+}
+
+.modal{
+	width: 95%;
+	max-width: 500px;
+	min-width: 300px;
+	padding: 40px;
+	background-color: #FFFFF8;
+	border-radius: 10px;
+	position: fixed;
+	top: 40%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.modal .close{
+	border: none;
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	background-color: #FFFFF8;
+	cursor: pointer;
+	font-size: 15px;
+}
+
+.modal h1{
+	display: flex;
+	font-weight: 400;
+	color: balck;
+	font-family: Work Sans;
+    text-align: center;
 	color: black;
+	padding-bottom: 30px;
+}
+
+.ajouter-une-photo{
+	padding: 10px 20px;
+	border-radius: 60px;
+	background-color: #1D6154;
+	border: none;
+	color: white;
+	width: 237px;
+    height: 36px;
+	font-family: syne;
+	font-weight: 700;
+}
+
+.border{
+	padding-bottom: 30px;
+	width: 75%;
+	border-top: 1px solid #B3B3B3;
 }

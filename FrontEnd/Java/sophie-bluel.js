@@ -73,14 +73,23 @@ function AdminMode() {
         
         const projetsEdition = document.createElement("div");
         projetsEdition.className = "projets-edition"
-        projetsEdition.innerHTML = '<a href=""><p><i class="fa-regular fa-pen-to-square"></i>modifier</p></a>'
+        projetsEdition.innerHTML = '<button class="modal-button"><i class="fa-regular fa-pen-to-square"></i>modifier</button>'
         document.querySelector(".mes-projets").append(projetsEdition);
+
         var element = document.querySelector(".categorie-div");
         element.remove();
-        document.querySelector("#logout").innerHTML = "logout";
-        document.querySelector("#logout").addEventListener("click", () => sessionStorage.removeItem("authtoken"))
+        document.getElementById("logout").innerHTML = "logout";
+        document.getElementById("logout").addEventListener("click", () => sessionStorage.removeItem("authtoken"))
     }
-
-
 }
 AdminMode();
+
+document.querySelector(".modal-button").addEventListener("click", toggleModal);
+
+const modalClosing = document.querySelectorAll(".modal-trigger");
+
+modalClosing.forEach(trigger => trigger.addEventListener("click", toggleModal))
+
+function toggleModal() {
+    document.querySelector(".modal-container").classList.toggle("active");
+}
