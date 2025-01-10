@@ -11,8 +11,10 @@ async function WorksApi(filter) {
         if (filter) {
             const projets = json.filter((data) => data.categoryId === filter);
             projets.forEach(PhotoGallery);
+            projets.forEach(PhotoGalleryModal);
         } else {
             json.forEach(PhotoGallery);
+            json.forEach(PhotoGalleryModal);
         }
 
     } catch (error) {
@@ -22,9 +24,19 @@ async function WorksApi(filter) {
 WorksApi();
 
 function PhotoGallery(data) {
-    const images = document.createElement("div");
+    const images = document.createElement("figure");
     images.innerHTML = `<img src=${data.imageUrl} alt=${data.title}><figcaption>${data.title}<figcaption>`;
+
     document.querySelector(".gallery").append(images);
+}
+
+function PhotoGalleryModal(data) {
+    const images = document.createElement("figure");
+    images.innerHTML = `<div class="icone-trash">
+                        <img src=${data.imageUrl} alt=${data.title}>
+                        <i class="fa-solid fa-trash-can overlay-icon"></i></div>`;
+
+    document.querySelector(".gallery-modal").append(images);
 }
 
 async function CategoriesApi() {
