@@ -16,6 +16,8 @@ async function WorksApi(filter) {
             json.forEach(PhotoGallery);
             json.forEach(PhotoGalleryModal);
         }
+        const poubelle = document.querySelectorAll(".fa-trash-can")
+        poubelle.forEach((e) => e.addEventListener("click", (event) => SuppPhoto(event)));
 
     } catch (error) {
         console.error(error.message);
@@ -25,6 +27,7 @@ WorksApi();
 
 function PhotoGallery(data) {
     const images = document.createElement("figure");
+    images.setAttribute("data-id", data.id);
     images.innerHTML = `<img src=${data.imageUrl} alt=${data.title}><figcaption>${data.title}<figcaption>`;
 
     document.querySelector(".gallery").append(images);
@@ -34,7 +37,7 @@ function PhotoGalleryModal(data) {
     const images = document.createElement("figure");
     images.innerHTML = `<div class="icone-trash">
                         <img src=${data.imageUrl} alt=${data.title}>
-                        <i class="fa-solid fa-trash-can overlay-icon"></i></div>`;
+                        <i id="${data.id}" class="fa-solid fa-trash-can overlay-icon"></i></div>`;
 
     document.querySelector(".gallery-modal").append(images);
 }
@@ -85,23 +88,66 @@ function AdminMode() {
         
         const projetsEdition = document.createElement("div");
         projetsEdition.className = "projets-edition"
-        projetsEdition.innerHTML = '<button class="modal-button"><i class="fa-regular fa-pen-to-square"></i>modifier</button>'
+        projetsEdition.innerHTML = '<button><i class="fa-regular fa-pen-to-square"></i>modifier</button>'
         document.querySelector(".mes-projets").append(projetsEdition);
 
         var element = document.querySelector(".categorie-div");
         element.remove();
         document.getElementById("logout").innerHTML = "logout";
+        document.getElementById("logout").href = "index.html";
         document.getElementById("logout").addEventListener("click", () => sessionStorage.removeItem("authtoken"))
     }
 }
 AdminMode();
 
-document.querySelector(".modal-button").addEventListener("click", toggleModal);
+const projetsEdition = document.querySelector(".projets-edition")
+if (projetsEdition){
+    projetsEdition.addEventListener("click", toggleModal);
+}
 
 const modalClosing = document.querySelectorAll(".modal-trigger");
-
 modalClosing.forEach(trigger => trigger.addEventListener("click", toggleModal))
 
 function toggleModal() {
     document.querySelector(".modal-container").classList.toggle("active");
+}
+
+async function SuppPhoto(event) {
+    const id = event.target.id;
+    const SuppApi = `http://localhost:5678/api/works/${id}`;
+    const token = sessionStorage.authtoken;
+
+    try {
+        let response = await fetch(SuppApi, {
+            method: "DELETE",
+            headers: {
+                Authorization: "Bearer " + token,
+            },
+        });
+
+        if (response.ok) {
+            const modalFigure = event.target.closest('figure');
+            if (modalFigure) {
+                modalFigure.remove();
+            }
+                const galleryFigure = document.querySelector(`.gallery figure[data-id="${id}"]`);
+            if (galleryFigure) {
+                galleryFigure.remove();
+            
+            }
+        } else {
+            const errorMessage = await response.json();
+            console.error(errorMessage);
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "error";
+            errorDiv.innerHTML = "Une erreur s'est produite, veuillez réessayer plus tard.";
+            document.querySelector(".gallery").append(errorDiv);
+        }
+    } catch (error) {
+        console.error("Erreur lors de la suppression de la photo:", error);
+        const errorDiv = document.createElement("div");
+        errorDiv.className = "error";
+        errorDiv.innerHTML = "Une erreur s'est produite";
+        document.querySelector(".gallery").append(errorDiv);
+    }
 }
