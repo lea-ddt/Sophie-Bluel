@@ -151,3 +151,24 @@ async function SuppPhoto(event) {
         document.querySelector(".gallery").append(errorDiv);
     }
 }
+
+
+const ajouterPhoto = document.querySelector(".ajouter-une-photo")
+const boutonRetour = document.querySelector(".retour")
+
+ajouterPhoto.addEventListener("click", switchModal);
+boutonRetour.addEventListener("click", switchModal);
+
+function switchModal() {
+    const modalGallery = document.querySelector(".modal-gallery");
+    const modalAddPhoto = document.querySelector(".modal-add-photo");
+
+    if (modalGallery.style.display === "block" || modalGallery.style.display === "") 
+    {
+        modalGallery.style.display = "none";
+        modalAddPhoto.style.display = "block";
+    } else {
+        modalGallery.style.display = "block";
+        modalAddPhoto.style.display = "none";
+    }
+}

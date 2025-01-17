@@ -40,17 +40,41 @@
 	<section id="portfolio">
 		<div class="mes-projets">
 	    	<h2>Mes Projets</h2>
+
 			<div class="modal-container">
+				<div class="overlay modal-trigger"></div>
+				<div class="modal modal-gallery active" style="display: block;">
+				<div class="modal">
+				  <button class="close modal-trigger"><i class="fa-solid fa-xmark"></i></button>
+				  <h1 class="galerie-photo">Galerie Photo</h1>
+				  <div class="gallery-modal"></div>
+				  <div class="border"></div>
+				  <button class="ajouter-une-photo">Ajouter une photo</button>
+				</div>
+				</div>
 
-			<div class="overlay modal-trigger"></div>
+				<div class="modal modal-add-photo" style="display: none;">
+				<div class="modal">
+				  <button class="close modal-trigger"><i class="fa-solid fa-xmark"></i></button>
+				  <button class="retour"><i class="fa-solid fa-arrow-left"></i></button>
+				  <h1 class="galerie-photo">Ajout Photo</h1>
 
-			<div class="modal">
-				<button class="close modal-trigger"><i class="fa-solid fa-xmark"></i></button>
-				<h1 class="galerie-photo">Garelie photo</h1>
-				<div class="gallery-modal"></div>
-				<div class="border"></div>
-				<button class="ajouter-une-photo">Ajouter une photo</button>
-			</div>
+				  <form action="#" method="post" class="modal-form">
+					<label for="title">Titre</label>
+					<input type="text" name="title" id="title">
+					<label for="category">Catégorie</label>
+					<select name="category" id="category">
+						<option value="null"></option>
+						<option value="Objets">Objets</option>
+						<option value="Appartements">Appartements</option>
+						<option value="Hotels & restaurants">Hotels & restaurants</option>
+					</select>
+				  </form>
+
+				  <div class="border"></div>
+				  <button class="validate-photo">Valider</button>
+				</div>
+				</div>
 	    	</div>
 
 		</div>
