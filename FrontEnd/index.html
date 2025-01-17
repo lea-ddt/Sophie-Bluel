@@ -60,9 +60,15 @@
 				  <h1 class="galerie-photo">Ajout Photo</h1>
 
 				  <form action="#" method="post" class="modal-form">
-					<label for="title">Titre</label>
+					<div class="file">
+						<div><i class="fa-regular fa-image"></i></div>
+						<label class="ajouter-fichier" for="file">+ Ajouter photo</label>
+						<input type="file" id="file" name="file" accept="images/png, images/jpeg">
+						<p>jpg, png : 4mo max</p>
+					 </div>
+					<label class="label" for="title">Titre</label>
 					<input type="text" name="title" id="title">
-					<label for="category">Catégorie</label>
+					<label class="label" for="category">Catégorie</label>
 					<select name="category" id="category">
 						<option value="null"></option>
 						<option value="Objets">Objets</option>
