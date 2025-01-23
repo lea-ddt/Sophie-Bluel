@@ -1,5 +1,4 @@
-async function WorksApi(filter) {
-    document.querySelector(".gallery").innerHTML = "";
+async function WorksApi() {
     const url = "http://localhost:5678/api/works";
     try {
         const response = await fetch(url);
@@ -8,22 +7,39 @@ async function WorksApi(filter) {
         }
 
         const json = await response.json();
+        return json;
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
+
+async function baseWorks(filter) {
+    document.querySelector(".gallery").innerHTML = "";
+    document.querySelector(".gallery-modal").innerHTML = "";
+   
+    try {
+        const data = await WorksApi();
+       
+        let projets;
         if (filter) {
-            const projets = json.filter((data) => data.categoryId === filter);
-            projets.forEach(PhotoGallery);
-            // projets.forEach(PhotoGalleryModal);
+            projets = data.filter((item) => item.categoryId === filter);
         } else {
-            json.forEach(PhotoGallery);
-            json.forEach(PhotoGalleryModal);
+            projets = data;
         }
-        const poubelle = document.querySelectorAll(".fa-trash-can")
+   
+        projets.forEach(PhotoGallery);
+        projets.forEach(PhotoGalleryModal);
+
+        const poubelle = document.querySelectorAll(".fa-trash-can");
         poubelle.forEach((e) => e.addEventListener("click", (event) => SuppPhoto(event)));
 
     } catch (error) {
         console.error(error.message);
     }
 }
-WorksApi();
+baseWorks();
+
 
 function PhotoGallery(data) {
     const images = document.createElement("figure");
@@ -51,8 +67,6 @@ async function CategoriesApi() {
         }
 
         const json = await response.json();
-
-        // json.forEach(CategoriesFilter);
         
         const categorySelect = document.getElementById("category")
         let option = document.createElement("option");
@@ -90,7 +104,7 @@ CategoriesApi();
 function CategoriesFilter(data) {
     const categorie = document.createElement("div");
     categorie.className = data.id;
-    categorie.addEventListener("click", () => WorksApi(data.id));
+    categorie.addEventListener("click", () => baseWorks(data.id));
     categorie.addEventListener("click", (event) => filterhover(event));
     document.querySelector(".Tous").addEventListener("click", (event) => filterhover(event));
     categorie.innerHTML = `${data.name}`;
@@ -102,7 +116,7 @@ function filterhover(event){
     Array.from(container.children).forEach((child) => child.classList.remove("active-filter"));
     event.target.classList.add("active-filter");
 }
-document.querySelector(".Tous").addEventListener("click", () => WorksApi());
+document.querySelector(".Tous").addEventListener("click", () => baseWorks());
 
 function AdminMode() {
     if (sessionStorage.authtoken){
@@ -138,19 +152,6 @@ function toggleModal() {
     document.querySelector(".modal-container").classList.toggle("active");
 }
 
-
-
-function addImageToDOM(data) {
-
-    PhotoGallery(data);
-
-    PhotoGalleryModal(data);
-
-    const trashIcon = document.querySelector(`.gallery-modal .fa-trash-can#${data.id}`);
-    if (trashIcon) {
-        trashIcon.addEventListener("click", (event) => SuppPhoto(event));
-    }
-}
 
 async function SuppPhoto(event) {
     const id = event.target.id;
