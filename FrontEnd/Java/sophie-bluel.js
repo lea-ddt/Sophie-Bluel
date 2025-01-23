@@ -11,7 +11,7 @@ async function WorksApi(filter) {
         if (filter) {
             const projets = json.filter((data) => data.categoryId === filter);
             projets.forEach(PhotoGallery);
-            projets.forEach(PhotoGalleryModal);
+            // projets.forEach(PhotoGalleryModal);
         } else {
             json.forEach(PhotoGallery);
             json.forEach(PhotoGalleryModal);
@@ -52,7 +52,7 @@ async function CategoriesApi() {
 
         const json = await response.json();
 
-        json.forEach(CategoriesFilter);
+        // json.forEach(CategoriesFilter);
         
         const categorySelect = document.getElementById("category")
         let option = document.createElement("option");
@@ -62,6 +62,7 @@ async function CategoriesApi() {
         categorySelect.appendChild(option);
 
         json.forEach((data) => {
+            CategoriesFilter(data);
             option = document.createElement("option");
             option.value = data.id;
             option.textContent = data.name;
