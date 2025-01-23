@@ -43,42 +43,42 @@
 
 			<div class="modal-container">
 				<div class="overlay modal-trigger"></div>
-				<div class="modal modal-gallery active" style="display: block;">
-				<div class="modal">
-				  <button class="close modal-trigger"><i class="fa-solid fa-xmark"></i></button>
-				  <h1 class="galerie-photo">Galerie Photo</h1>
-				  <div class="gallery-modal"></div>
-				  <div class="border"></div>
-				  <button class="ajouter-une-photo">Ajouter une photo</button>
+			   	   <div class="modal modal-gallery active" style="display: block;">
+				      <div class="modal">
+				         <button class="close modal-trigger"><i class="fa-solid fa-xmark"></i></button>
+				         <h1 class="galerie-photo">Galerie Photo</h1>
+				      <div class="gallery-modal"></div>
+				      <div class="border"></div>
+				   <button class="ajouter-une-photo">Ajouter une photo</button>
 				</div>
 				</div>
 
 				<div class="modal modal-add-photo" style="display: none;">
-				<div class="modal">
-				  <button class="close modal-trigger"><i class="fa-solid fa-xmark"></i></button>
-				  <button class="retour"><i class="fa-solid fa-arrow-left"></i></button>
-				  <h1 class="galerie-photo">Ajout Photo</h1>
+				   <div class="modal">
+				      <button class="close modal-trigger"><i class="fa-solid fa-xmark"></i></button>
+				      <button class="retour"><i class="fa-solid fa-arrow-left"></i></button>
+				      <h1 class="galerie-photo">Ajout Photo</h1>
 
-				  <form action="#" method="post" class="modal-form">
-					<div class="file">
-						<div><i class="fa-regular fa-image"></i></div>
-						<label class="ajouter-fichier" for="file">+ Ajouter photo</label>
-						<input type="file" id="file" name="file" accept="images/png, images/jpeg">
-						<p>jpg, png : 4mo max</p>
-					 </div>
-					<label class="label" for="title">Titre</label>
-					<input type="text" name="title" id="title">
-					<label class="label" for="category">Catégorie</label>
-					<select name="category" id="category">
-						<option value="null"></option>
-						<option value="Objets">Objets</option>
-						<option value="Appartements">Appartements</option>
-						<option value="Hotels & restaurants">Hotels & restaurants</option>
-					</select>
-				  </form>
+				        <form action="#" method="post" class="modal-form">
+					        <div class="file">
+						        <div id="preview-container"></div>
+						            <div class="file-display">
+						                <div class="file-fa-image"><i class="fa-regular fa-image"></i></div>
+						                <label class="ajouter-fichier" for="file">+ Ajouter photo</label>
+						                <input type="file" id="file" name="file" accept="images/png, images/jpeg">
+						                <p class="file-paragraphe">jpg, png : 4mo max</p>
+					                </div>
+					        </div>
 
-				  <div class="border"></div>
-				  <button class="validate-photo">Valider</button>
+					           <label class="label" for="title">Titre</label>
+					           <input class="form-title-modal" type="text" name="title" id="title">
+					           <div class="category-api"></div>
+					           <label class="label" for="category">Catégorie</label>
+					           <select name="category" id="category"></select>
+							   <div class="border"></div>		
+							   <input class="validate-photo modal-trigger" type="submit" value="Valider">
+				        </form>
+
 				</div>
 				</div>
 	    	</div>
@@ -101,7 +101,7 @@
 			<input type="email" name="email" id="email">
 			<label for="message">Message</label>
 			<textarea name="message" id="message" cols="30" rows="10"></textarea>
-			<input type="submit" value="Envoyer">
+			<input class="envoyer-form" type="submit" value="Envoyer">
 		</form>
 	</section>
 </main>
