@@ -31,8 +31,7 @@ async function baseWorks(filter) {
         projets.forEach(PhotoGallery);
         projets.forEach(PhotoGalleryModal);
 
-        const poubelle = document.querySelectorAll(".fa-trash-can");
-        poubelle.forEach((e) => e.addEventListener("click", (event) => SuppPhoto(event)));
+        SuppTrashCan();
 
     } catch (error) {
         console.error(error.message);
@@ -87,7 +86,7 @@ async function CategoriesApi() {
         categorySelect.addEventListener("change", (event) => {
             const selectedId = event.target.value;
             if (selectedId) {
-                console.log(`${selectedId}`);
+                // console.log(`${selectedId}`);
             } else {
                 console.log("Pas de catégorie selectionnée");
             }
@@ -214,6 +213,10 @@ function switchModal() {
     }
 }
 
+function SuppTrashCan() {
+    const poubelle = document.querySelectorAll(".fa-trash-can");
+    poubelle.forEach((e) => e.addEventListener("click", (event) => SuppPhoto(event)));
+}
 
 let img = document.createElement("img");
 let file;
@@ -222,13 +225,11 @@ const fileInput = document.getElementById('file');
 const previewContainer = document.getElementById('preview-container');
 
 fileInput.addEventListener('change', function(event) {
-
-    previewContainer.innerHTML = "";
     file = event.target.files[0];
+    previewContainer.innerHTML = "";
 
     if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
         const imgUrl = URL.createObjectURL(file);
-        const fileDisplay = document.querySelector(".file-display")
 
         const imgElement = document.createElement('img');
         imgElement.src = imgUrl;
@@ -237,7 +238,7 @@ fileInput.addEventListener('change', function(event) {
         imgElement.style.maxHeight = "200px";
 
         previewContainer.appendChild(imgElement);
-        fileDisplay.style.display = "none"
+        document.querySelector(".file-display").style.display = "none"
 
     } else {
         alert("Veuillez sélectionner un fichier JPG ou PNG valide.");
@@ -254,7 +255,6 @@ categorySelect.addEventListener("change", (event) => {
 
 titlePicture.addEventListener("input", function () {
     titleValue = titlePicture.value;
-    console.log(titleValue);
 })
 
 
@@ -268,7 +268,6 @@ imageForm.addEventListener("submit", async (event) => {
         return;
     }
 
-    console.log("Image et titre valides.");
     const formData = new FormData();
     if (file) {
         formData.append("image", file);
@@ -316,6 +315,7 @@ imageForm.addEventListener("submit", async (event) => {
         document.querySelector(".file-display").style.display = "block";
 
         switchModal();
+        toggleModal();
 
     } catch (error) {
         console.error("Erreur lors de la requête POST : ", error);
@@ -325,7 +325,5 @@ imageForm.addEventListener("submit", async (event) => {
 function addImageToDOM(data) {
     PhotoGallery(data);
     PhotoGalleryModal(data);
-    const poubelle = document.querySelectorAll(".fa-trash-can")
-    poubelle.forEach((e) => e.addEventListener("click", (event) => SuppPhoto(event)));
+    SuppTrashCan();
 }
-
