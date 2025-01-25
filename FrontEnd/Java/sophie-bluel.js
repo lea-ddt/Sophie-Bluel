@@ -313,6 +313,7 @@ imageForm.addEventListener("submit", async (event) => {
         imageForm.reset();
         previewContainer.innerHTML = "";
         document.querySelector(".file-display").style.display = "block";
+        validateForm();
 
         switchModal();
         toggleModal();
@@ -327,3 +328,30 @@ function addImageToDOM(data) {
     PhotoGalleryModal(data);
     SuppTrashCan();
 }
+
+
+const submitButton = document.querySelector(".validate-photo");
+
+function validateForm() {
+    const titleValue = titlePicture.value.trim();
+    const selectedValue = categorySelect.value.trim();
+    const hasImage = file && (file.type === "image/png" || file.type === "image/jpeg");
+
+    if (titleValue && selectedValue && hasImage) {
+        // Activer et changer la couleur du bouton
+        submitButton.style.backgroundColor = "#1D6154";
+        submitButton.disabled = false;
+    } else {
+        // Désactiver et restaurer la couleur par défaut
+        submitButton.style.backgroundColor = "#ccc";
+        submitButton.disabled = true;
+    }
+}
+
+// Écouter les événements sur les champs du formulaire
+titlePicture.addEventListener("input", validateForm);
+categorySelect.addEventListener("change", validateForm);
+fileInput.addEventListener("change", function (event) {
+    file = event.target.files[0];
+    validateForm();
+});
