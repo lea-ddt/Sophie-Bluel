@@ -125,6 +125,24 @@ nav li {
 #portfolio h2 {
 	text-align: center;
 }
+
+.mes-projets{
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	align-items: center;
+	margin: 100px 0 70px 0;
+}
+
+
+
+
+/* 
+* ----------------
+*      GALLERY
+* ----------------
+*/
+
 .gallery{
 	width: 100%;
 	display: grid;
@@ -137,17 +155,14 @@ nav li {
 	width: 100%;
 }
 
-.gallery-modal{
-	display: grid;
-	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-	grid-column-gap: 13px;
-    grid-row-gap: 30px;
-	padding-bottom: 40px;
-}
 
-.gallery-modal img{
-	width: 100%;
-}
+
+
+/* 
+* ----------------
+*     CONTACT
+* ----------------
+*/
 
 #contact {
 	width: 50%;
@@ -181,38 +196,20 @@ margin: auto;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-.envoyer-form{
-	font-family: 'Syne';
-	font-weight: 700;
-	color: white;
-	background-color: #1D6154;
-	margin : 2em auto ;
-	width: 180px;
-	text-align: center;
-	border-radius: 60px ;
-}
-
 footer nav ul {
 	display: flex;
 	justify-content: flex-end;
 	margin: 2em;
 }
 
-.mdp{
-	color: black;
-}
 
-.lien-header{
-	font-weight: 100;
-	text-decoration: none;
-	color: black;
-}
 
-.lien-header-gras{
-	font-weight: 900;
-	text-decoration: none;
-	color: black;
-}
+
+/* 
+* ----------------
+*     FILTRES
+* ----------------
+*/
 
 .categorie-div{
 	display: flex;
@@ -242,6 +239,31 @@ footer nav ul {
 	background-color: #1D6154;
 }
 
+
+
+
+/* 
+* ----------------
+*      LOGIN
+* ----------------
+*/
+
+.mdp{
+	color: black;
+}
+
+.lien-header{
+	font-weight: 100;
+	text-decoration: none;
+	color: black;
+}
+
+.lien-header-gras{
+	font-weight: 900;
+	text-decoration: none;
+	color: black;
+}
+
 .error{
 	display: flex;
 	justify-content: center;
@@ -251,6 +273,15 @@ footer nav ul {
 	border-radius: 5px;
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
+
+
+
+
+/* 
+* -----------------
+*     MODE ADMIN
+* -----------------
+*/
 
 .edition{
 	display: flex;
@@ -262,14 +293,6 @@ footer nav ul {
 	position: absolute;
 	left: 0;
 	top: 0;
-}
-
-.mes-projets{
-	display: flex;
-	justify-content: center;
-	gap: 20px;
-	align-items: center;
-	margin: 100px 0 70px 0;
 }
 
 .projets-edition button{
@@ -284,6 +307,32 @@ footer nav ul {
 
 .fa-regular{
     padding-right: 6px;
+}
+
+
+
+
+/* 
+* ----------------
+*     MODAL 1
+* ----------------
+*/
+
+.galerie-photo{
+    font-size: x-large;
+    padding-bottom: 40px;
+}
+
+.gallery-modal{
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+	grid-column-gap: 13px;
+    grid-row-gap: 30px;
+	padding-bottom: 10px;
+}
+
+.gallery-modal img{
+	width: 100%;
 }
 
 .modal-container{
@@ -334,16 +383,6 @@ footer nav ul {
 	font-size: 15px;
 }
 
-.retour{
-	border: none;
-	position: absolute;
-	top: 20px;
-	left: 20px;
-	background-color: #FFFFF8;
-	cursor: pointer;
-	font-size: 15px;
-}
-
 .modal h1{
 	display: flex;
 	font-weight: 400;
@@ -364,11 +403,6 @@ footer nav ul {
 	font-family: syne;
 	font-weight: 700;
 	margin-top: 30px;
-}
-
-.modal-form .border{
-	padding-bottom: 30px;
-	border-bottom: 1px solid #B3B3B3;
 }
 
 .modal-gallery .border{
@@ -400,6 +434,25 @@ footer nav ul {
 	border-radius: 2px;
 }
 
+
+
+
+/* 
+* ----------------
+*     MODALE 2
+* ----------------
+*/
+
+.retour{
+	border: none;
+	position: absolute;
+	top: 20px;
+	left: 20px;
+	background-color: #FFFFF8;
+	cursor: pointer;
+	font-size: 15px;
+}
+
 .modal-form{
 	text-align: left;
 	display: flex;
@@ -416,6 +469,17 @@ footer nav ul {
 
 .modal-form .label{
 	margin: 2em 0 1em 0;
+}
+
+.envoyer-form{
+	font-family: 'Syne';
+	font-weight: 700;
+	color: white;
+	background-color: #1D6154;
+	margin : 2em auto ;
+	width: 180px;
+	text-align: center;
+	border-radius: 60px ;
 }
 
 form select{
@@ -484,16 +548,60 @@ form select{
 	justify-content: center;
 }
 
+.modal-form .border{
+	padding-bottom: 30px;
+	border-bottom: 1px solid #B3B3B3;
+}
+
 .validate-photo{
 	background-color: #A7A7A7;
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
-	margin : 2em auto ;
+    margin: auto;
+    margin-top: 30px;
 	text-align: center;
 	border-radius: 60px ;
 }
 
-.validate-photo-ok{
-	background-color: #1D6154;
+@media (max-width: 767.98px) {
+	header{
+		flex-direction: column;
+		align-items: center;
+		gap: 15px;
+	}
+
+	#introduction{
+		flex-direction: column;
+		margin: 15px;
+	}
+
+	.modal{
+		width: 30%;
+		position: absolute;
+	}
+
+	.modal-container{
+		top: inherit;
+	}
+
+	.gallery-modal{
+		display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+	}
+
+	.envoyer-form{
+		max-width: 100%;
+		padding: 0 20px 0 20px;
+	}
+
+	.mes-projets{
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.gallery{
+		grid-template-columns: 1fr 1fr;
+	}
 }

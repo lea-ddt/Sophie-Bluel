@@ -1,3 +1,5 @@
+
+// fonction pour récuperer les photos de l'API
 async function WorksApi() {
     const url = "http://localhost:5678/api/works";
     try {
@@ -14,6 +16,8 @@ async function WorksApi() {
 }
 
 
+
+// Fonction de base, affichage de la gallery et la modale
 async function baseWorks(filter) {
     document.querySelector(".gallery").innerHTML = "";
     document.querySelector(".gallery-modal").innerHTML = "";
@@ -40,23 +44,37 @@ async function baseWorks(filter) {
 baseWorks();
 
 
+
+// -------------
+//    GALLERY
+// -------------
+
+// fonction affichage de la gallerie
 function PhotoGallery(data) {
     const images = document.createElement("figure");
     images.setAttribute("data-id", data.id);
-    images.innerHTML = `<img src=${data.imageUrl} alt=${data.title}><figcaption>${data.title}<figcaption>`;
-
+    images.innerHTML = `<img src=${data.imageUrl} alt=${data.title}>
+                        <figcaption>${data.title}<figcaption>`;
     document.querySelector(".gallery").append(images);
 }
 
+
+// fonction affichage de la gallerie modale
 function PhotoGalleryModal(data) {
     const images = document.createElement("figure");
     images.innerHTML = `<div class="icone-trash">
                         <img src=${data.imageUrl} alt=${data.title}>
                         <i id="${data.id}" class="fa-solid fa-trash-can overlay-icon"></i></div>`;
-
     document.querySelector(".gallery-modal").append(images);
 }
 
+
+
+// ----------------
+//    CATEGORIES
+// ----------------
+
+// Fonction pour récuperer les catégorie de l'API
 async function CategoriesApi() {
     const url = "http://localhost:5678/api/categories";
     try {
@@ -66,14 +84,16 @@ async function CategoriesApi() {
         }
 
         const json = await response.json();
-        
+
+        // creation de l'option null pour la modale
         const categorySelect = document.getElementById("category")
         let option = document.createElement("option");
-        option.value = "";
-        option.textContent = "";
-        option.selected = false
+            option.value = "";
+            option.textContent = "";
+            option.selected = false
         categorySelect.appendChild(option);
 
+        // creation des options pour la modale
         json.forEach((data) => {
             CategoriesFilter(data);
             option = document.createElement("option");
@@ -85,11 +105,6 @@ async function CategoriesApi() {
 
         categorySelect.addEventListener("change", (event) => {
             const selectedId = event.target.value;
-            if (selectedId) {
-                // console.log(`${selectedId}`);
-            } else {
-                console.log("Pas de catégorie selectionnée");
-            }
         });
         
 
@@ -100,38 +115,54 @@ async function CategoriesApi() {
 CategoriesApi();
 
 
+
+// fonction ajout des categories de façon dynamique
 function CategoriesFilter(data) {
     const categorie = document.createElement("div");
-    categorie.className = data.id;
-    categorie.addEventListener("click", () => baseWorks(data.id));
-    categorie.addEventListener("click", (event) => filterhover(event));
+          categorie.className = data.id;
+          categorie.addEventListener("click", () => baseWorks(data.id)); // au clique appel de la fonction baseWorks
+          categorie.addEventListener("click", (event) => filterhover(event)); // au clique appel de la fonction filterhover
     document.querySelector(".Tous").addEventListener("click", (event) => filterhover(event));
-    categorie.innerHTML = `${data.name}`;
+          categorie.innerHTML = `${data.name}`;
     document.querySelector(".categorie-div").append(categorie);
 }
 
+
+
+// fonction qui permet de faire apparaitre et disparaitre la class "active-filter"
 function filterhover(event){
     const container = document.querySelector(".categorie-div");
     Array.from(container.children).forEach((child) => child.classList.remove("active-filter"));
     event.target.classList.add("active-filter");
 }
-document.querySelector(".Tous").addEventListener("click", () => baseWorks());
+document.querySelector(".Tous").addEventListener("click", () => baseWorks()); // tous les travaux s'affiche quand le filtre "Tous" est cliqué
 
+
+
+// ----------------
+//    MODE ADMIN
+// ----------------
+
+// fonction d'affichage après le login
 function AdminMode() {
     if (sessionStorage.authtoken){
+        //bannière noir
         const banner = document.createElement("div");
         banner.className = "edition"
         banner.innerHTML = '<p><i class="fa-regular fa-pen-to-square"></i>Mode édition</p>';
         document.body.prepend(banner);
         
+        // bonton modifier modale
         const projetsEdition = document.createElement("div");
         projetsEdition.className = "projets-edition"
         projetsEdition.innerHTML = '<button><i class="fa-regular fa-pen-to-square"></i>modifier</button>'
         document.querySelector(".mes-projets").append(projetsEdition);
 
+        // retirer les catégories
         const categoryDiv = document.querySelector(".categorie-div")
         categoryDiv.style.display = "none"
 
+        // bouton logout
         document.getElementById("logout").innerHTML = "logout";
         document.getElementById("logout").href = "index.html";
         document.getElementById("logout").addEventListener("click", () => sessionStorage.removeItem("authtoken"))
@@ -139,11 +170,18 @@ function AdminMode() {
 }
 AdminMode();
 
+
+
+// --------------
+//    MODALE 1
+// --------------
+
+// affichage de la modale en appuyant sur modifier
 const projetsEdition = document.querySelector(".projets-edition")
 if (projetsEdition){
     projetsEdition.addEventListener("click", toggleModal);
 }
-
+// fermeture de la modale a chaque "modal-trigger"
 const modalClosing = document.querySelectorAll(".modal-trigger");
 modalClosing.forEach(trigger => trigger.addEventListener("click", toggleModal))
 
@@ -152,6 +190,12 @@ function toggleModal() {
 }
 
 
+
+// ----------------
+//    SUPP PHOTO
+// ----------------
+
+// fonction supprimer les photos de la gallerie et de la modale
 async function SuppPhoto(event) {
     const id = event.target.id;
     const SuppApi = `http://localhost:5678/api/works/${id}`;
@@ -166,15 +210,17 @@ async function SuppPhoto(event) {
         });
 
         if (response.ok) {
+            // supprimer la photo de la modale
             const modalFigure = event.target.closest("figure");
             if (modalFigure) {
                 modalFigure.remove();
             }
-
+            // supprimer la photo de la gallerie avec le même id
             const galleryFigure = document.querySelector(`.gallery figure[data-id="${id}"]`);
             if (galleryFigure) {
                 galleryFigure.remove();
             }
+
         } else {
             const errorMessage = await response.json();
             console.error(errorMessage);
@@ -183,6 +229,7 @@ async function SuppPhoto(event) {
             errorDiv.innerHTML = "Une erreur s'est produite, veuillez réessayer plus tard.";
             document.querySelector(".gallery").append(errorDiv);
         }
+        
     } catch (error) {
         console.error("Erreur lors de la suppression de la photo:", error);
         const errorDiv = document.createElement("div");
@@ -193,12 +240,29 @@ async function SuppPhoto(event) {
 }
 
 
+
+// fonction qui permet de supprimer la photo en cliquant le l'icône poubelle
+function SuppTrashCan() {
+    const poubelle = document.querySelectorAll(".fa-trash-can");
+    poubelle.forEach((e) => e.addEventListener("click", (event) => SuppPhoto(event)));
+}
+
+
+
+// --------------
+//    MODALE 2
+// --------------
+
+// ouverture de la modale ajout de photo
 const ajouterPhoto = document.querySelector(".ajouter-une-photo")
 const boutonRetour = document.querySelector(".retour")
 
 ajouterPhoto.addEventListener("click", switchModal);
 boutonRetour.addEventListener("click", switchModal);
 
+
+
+// fonction qui permet d'ouvrir ou fermer une modale avec le dsplay
 function switchModal() {
     const modalGallery = document.querySelector(".modal-gallery");
     const modalAddPhoto = document.querySelector(".modal-add-photo");
@@ -213,10 +277,11 @@ function switchModal() {
     }
 }
 
-function SuppTrashCan() {
-    const poubelle = document.querySelectorAll(".fa-trash-can");
-    poubelle.forEach((e) => e.addEventListener("click", (event) => SuppPhoto(event)));
-}
+
+
+// ----------------
+//    FORMULAIRE
+// ----------------
 
 let img = document.createElement("img");
 let file;
@@ -224,6 +289,7 @@ let file;
 const fileInput = document.getElementById('file');
 const previewContainer = document.getElementById('preview-container');
 
+// fonction qui défini l'image dans la modale 
 fileInput.addEventListener('change', function(event) {
     file = event.target.files[0];
     previewContainer.innerHTML = "";
@@ -245,19 +311,26 @@ fileInput.addEventListener('change', function(event) {
     }});
 
 
+
+// défini le titre de la photo ajouter
 const titlePicture = document.getElementById("title");
 let titleValue = "";
 
+// défini la catégorie de la photo ajouter
 const categorySelect = document.getElementById("category");
 categorySelect.addEventListener("change", (event) => {
     selectedValue = event.target.value;
 });
 
+// écoute le titre de la photo
 titlePicture.addEventListener("input", function () {
     titleValue = titlePicture.value;
 })
 
 
+
+
+// fonction qui défini si le formulaire est complet ou non 
 const imageForm = document.querySelector(".modal-form")
 imageForm.addEventListener("submit", async (event) => {
     event.preventDefault();
@@ -268,6 +341,7 @@ imageForm.addEventListener("submit", async (event) => {
         return;
     }
 
+    // ajout de l'image
     const formData = new FormData();
     if (file) {
         formData.append("image", file);
@@ -277,18 +351,22 @@ imageForm.addEventListener("submit", async (event) => {
         console.error("Aucun fichier sélectionné.");
     }
 
+    // ajout du titre
     formData.append("title", titleValue);
     console.log("Titre : ", titleValue);
 
+    // ajout de la catégorie
     formData.append("category", selectedValue);
     console.log("Catégorie : ", selectedValue);
 
+    // ajout du token
     const token = sessionStorage.authtoken;
     if (!token) {
         console.error("Token manquant.");
         return;
     }
 
+    // fetch de l'API ajouter une photo
     try {
         const response = await fetch("http://localhost:5678/api/works", {
             method: "POST",
@@ -308,14 +386,19 @@ imageForm.addEventListener("submit", async (event) => {
         const result = await response.json();
         console.log("Réponse réussie :", result);
 
+        // ajout de l'image dans la modale et la galerie
         addImageToDOM(result);
 
+        // reset de la modale "ajouter une photo"
         imageForm.reset();
         previewContainer.innerHTML = "";
         document.querySelector(".file-display").style.display = "block";
+        // bouton valider
         validateForm();
 
+        // retourner à la première modale 
         switchModal();
+        // fermeture de la modale après validation
         toggleModal();
 
     } catch (error) {
@@ -323,6 +406,9 @@ imageForm.addEventListener("submit", async (event) => {
     }
 });
 
+
+
+// fonction qui regroupe les images de la gallerie et la modale + supprimer la photo dans la modale sans raflraichir la page
 function addImageToDOM(data) {
     PhotoGallery(data);
     PhotoGalleryModal(data);
@@ -330,8 +416,10 @@ function addImageToDOM(data) {
 }
 
 
+
 const submitButton = document.querySelector(".validate-photo");
 
+// focntion bouton valider vert quand le formulaire est complet
 function validateForm() {
     const titleValue = titlePicture.value.trim();
     const selectedValue = categorySelect.value.trim();
@@ -339,11 +427,11 @@ function validateForm() {
 
     if (titleValue && selectedValue && hasImage) {
         // Activer et changer la couleur du bouton
-        submitButton.style.backgroundColor = "#1D6154";
+        submitButton.style.backgroundColor = "#1D6154"; // couleur vert
         submitButton.disabled = false;
     } else {
         // Désactiver et restaurer la couleur par défaut
-        submitButton.style.backgroundColor = "#ccc";
+        submitButton.style.backgroundColor = "#ccc"; // couleur gris 
         submitButton.disabled = true;
     }
 }
