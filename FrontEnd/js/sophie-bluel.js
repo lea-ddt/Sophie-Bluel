@@ -1,5 +1,6 @@
+let AllWorks = []; // Tableau pour stocker toutes les œuvres récupérées depuis l'API
 
-// fonction pour récuperer les photos de l'API
+// Fonction pour récupérer les œuvres depuis l'API
 async function WorksApi() {
     const url = "http://localhost:5678/api/works";
     try {
@@ -8,40 +9,26 @@ async function WorksApi() {
             throw new Error(`Response status: ${response.status}`);
         }
 
-        const json = await response.json();
-        return json;
+        AllWorks = await response.json(); // Stockage des données reçues
+        baseWorks(); // Affichage initial de la galerie
     } catch (error) {
         console.error(error.message);
     }
 }
+WorksApi();
 
-
-
-// Fonction de base, affichage de la gallery et la modale
-async function baseWorks(filter) {
+// Fonction principale pour afficher la galerie et la modale avec un filtre optionnel
+function baseWorks(filter) {
     document.querySelector(".gallery").innerHTML = "";
     document.querySelector(".gallery-modal").innerHTML = "";
-   
-    try {
-        const data = await WorksApi();
-       
-        let projets;
-        if (filter) {
-            projets = data.filter((item) => item.categoryId === filter);
-        } else {
-            projets = data;
-        }
-   
-        projets.forEach(PhotoGallery);
-        projets.forEach(PhotoGalleryModal);
 
-        SuppTrashCan();
+    let projets = filter ? AllWorks.filter((item) => item.categoryId === filter) : AllWorks;
+    
+    projets.forEach(PhotoGallery); // Affichage des œuvres dans la galerie
+    projets.forEach(PhotoGalleryModal); // Affichage dans la modale
 
-    } catch (error) {
-        console.error(error.message);
-    }
+    SuppTrashCan(); // Activation des icônes de suppression
 }
-baseWorks();
 
 
 
@@ -49,7 +36,7 @@ baseWorks();
 //    GALLERY
 // -------------
 
-// fonction affichage de la gallerie
+// Fonction d'affichage des images dans la galerie
 function PhotoGallery(data) {
     const images = document.createElement("figure");
     images.setAttribute("data-id", data.id);
@@ -59,7 +46,7 @@ function PhotoGallery(data) {
 }
 
 
-// fonction affichage de la gallerie modale
+// Fonction d'affichage des images dans la galerie modale
 function PhotoGalleryModal(data) {
     const images = document.createElement("figure");
     images.innerHTML = `<div class="icone-trash">
@@ -74,7 +61,7 @@ function PhotoGalleryModal(data) {
 //    CATEGORIES
 // ----------------
 
-// Fonction pour récuperer les catégorie de l'API
+// Fonction pour récuperer les catégories depuis l'API
 async function CategoriesApi() {
     const url = "http://localhost:5678/api/categories";
     try {
@@ -84,16 +71,16 @@ async function CategoriesApi() {
         }
 
         const json = await response.json();
-
-        // creation de l'option null pour la modale
         const categorySelect = document.getElementById("category")
+
+        // Création de l'option vide par défaut
         let option = document.createElement("option");
             option.value = "";
             option.textContent = "";
             option.selected = false
         categorySelect.appendChild(option);
 
-        // creation des options pour la modale
+        // Ajout des catégories dynamiquement
         json.forEach((data) => {
             CategoriesFilter(data);
             option = document.createElement("option");
@@ -103,11 +90,6 @@ async function CategoriesApi() {
             categorySelect.appendChild(option);
         });
 
-        categorySelect.addEventListener("change", (event) => {
-            const selectedId = event.target.value;
-        });
-        
-
     } catch (error) {
         console.error(error.message);
     }
@@ -116,12 +98,12 @@ CategoriesApi();
 
 
 
-// fonction ajout des categories de façon dynamique
+// Fonction pour ajouter dynamiquement les catégories dans le filtre
 function CategoriesFilter(data) {
     const categorie = document.createElement("div");
           categorie.className = data.id;
-          categorie.addEventListener("click", () => baseWorks(data.id)); // au clique appel de la fonction baseWorks
-          categorie.addEventListener("click", (event) => filterhover(event)); // au clique appel de la fonction filterhover
+          categorie.addEventListener("click", () => baseWorks(data.id)); // Filtrage des œuvres
+          categorie.addEventListener("click", (event) => filterhover(event)); // Effet visuel
     document.querySelector(".Tous").addEventListener("click", (event) => filterhover(event));
           categorie.innerHTML = `${data.name}`;
     document.querySelector(".categorie-div").append(categorie);
@@ -129,36 +111,37 @@ function CategoriesFilter(data) {
 
 
 
-// fonction qui permet de faire apparaitre et disparaitre la class "active-filter"
-function filterhover(event){
+// Fonction pour gérer l'effet de survol actif sur les filtres
+function filterhover(event) {
     const container = document.querySelector(".categorie-div");
     Array.from(container.children).forEach((child) => child.classList.remove("active-filter"));
     event.target.classList.add("active-filter");
 }
-document.querySelector(".Tous").addEventListener("click", () => baseWorks()); // tous les travaux s'affiche quand le filtre "Tous" est cliqué
 
+document.querySelector(".Tous").addEventListener("click", () => baseWorks()); // Affichage de toutes les œuvres
 
 
 // ----------------
 //    MODE ADMIN
 // ----------------
 
-// fonction d'affichage après le login
+
+// Fonction d'affichage après le login
 function AdminMode() {
     if (sessionStorage.authtoken){
-        //bannière noir
+        //bannière d'édition noir
         const banner = document.createElement("div");
         banner.className = "edition"
         banner.innerHTML = '<p><i class="fa-regular fa-pen-to-square"></i>Mode édition</p>';
         document.body.prepend(banner);
         
-        // bonton modifier modale
+        // Bonton modifier modale
         const projetsEdition = document.createElement("div");
         projetsEdition.className = "projets-edition"
         projetsEdition.innerHTML = '<button><i class="fa-regular fa-pen-to-square"></i>modifier</button>'
         document.querySelector(".mes-projets").append(projetsEdition);
 
-        // retirer les catégories
+        // Retirer les catégories
         const categoryDiv = document.querySelector(".categorie-div")
         categoryDiv.style.display = "none"
 
@@ -195,7 +178,7 @@ function toggleModal() {
 //    SUPP PHOTO
 // ----------------
 
-// fonction supprimer les photos de la gallerie et de la modale
+// Fonction de suppression des photos
 async function SuppPhoto(event) {
     const id = event.target.id;
     const SuppApi = `http://localhost:5678/api/works/${id}`;
@@ -241,7 +224,7 @@ async function SuppPhoto(event) {
 
 
 
-// fonction qui permet de supprimer la photo en cliquant le l'icône poubelle
+// Activation des boutons de suppression
 function SuppTrashCan() {
     const poubelle = document.querySelectorAll(".fa-trash-can");
     poubelle.forEach((e) => e.addEventListener("click", (event) => SuppPhoto(event)));
@@ -249,24 +232,24 @@ function SuppTrashCan() {
 
 
 
-// --------------
-//    MODALE 2
-// --------------
+// ------------------------
+//    MODALE AJOUT PHOTO
+// ------------------------
 
-// ouverture de la modale ajout de photo
-const ajouterPhoto = document.querySelector(".ajouter-une-photo")
-const boutonRetour = document.querySelector(".retour")
+// Sélection des boutons pour ouvrir et fermer la modale d'ajout de photo
+const ajouterPhoto = document.querySelector(".ajouter-une-photo");
+const boutonRetour = document.querySelector(".retour");
 
+// Ajout d'un événement pour ouvrir ou fermer la modale lorsque les boutons sont cliqués
 ajouterPhoto.addEventListener("click", switchModal);
 boutonRetour.addEventListener("click", switchModal);
 
-
-
-// fonction qui permet d'ouvrir ou fermer une modale avec le dsplay
+// Fonction qui permet de basculer entre la galerie et la modale d'ajout de photo
 function switchModal() {
     const modalGallery = document.querySelector(".modal-gallery");
     const modalAddPhoto = document.querySelector(".modal-add-photo");
 
+    // Vérifie l'état actuel et bascule entre les deux vues
     if (modalGallery.style.display === "block" || modalGallery.style.display === "") 
     {
         modalGallery.style.display = "none";
@@ -277,25 +260,24 @@ function switchModal() {
     }
 }
 
+// --------------
+//   FORMULAIRE
+// --------------
 
+let img = document.createElement("img"); // Création d'un élément image pour l'aperçu
+let file; // Variable pour stocker le fichier image sélectionné
 
-// ----------------
-//    FORMULAIRE
-// ----------------
+const fileInput = document.getElementById('file'); // Sélection du champ d'upload
+const previewContainer = document.getElementById('preview-container'); // Conteneur d'aperçu de l'image
 
-let img = document.createElement("img");
-let file;
-
-const fileInput = document.getElementById('file');
-const previewContainer = document.getElementById('preview-container');
-
-// fonction qui défini l'image dans la modale 
+// Ajout d'un événement pour gérer l'affichage de l'image sélectionnée
 fileInput.addEventListener('change', function(event) {
-    file = event.target.files[0];
-    previewContainer.innerHTML = "";
+    file = event.target.files[0]; // Récupère le fichier sélectionné
+    previewContainer.innerHTML = ""; // Réinitialise l'aperçu
 
+    // Vérifie si le fichier est une image PNG ou JPEG
     if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
-        const imgUrl = URL.createObjectURL(file);
+        const imgUrl = URL.createObjectURL(file); // Génère une URL temporaire pour l'aperçu
 
         const imgElement = document.createElement('img');
         imgElement.src = imgUrl;
@@ -303,45 +285,42 @@ fileInput.addEventListener('change', function(event) {
         imgElement.style.maxWidth = "200px";
         imgElement.style.maxHeight = "200px";
 
-        previewContainer.appendChild(imgElement);
-        document.querySelector(".file-display").style.display = "none"
+        previewContainer.appendChild(imgElement); // Ajoute l'image à l'aperçu
+        document.querySelector(".file-display").style.display = "none"; // Cache le bouton d'upload
 
     } else {
         alert("Veuillez sélectionner un fichier JPG ou PNG valide.");
-    }});
+    }
+});
 
-
-
-// défini le titre de la photo ajouter
+// Sélection et écoute des champs du formulaire
 const titlePicture = document.getElementById("title");
 let titleValue = "";
-
-// défini la catégorie de la photo ajouter
 const categorySelect = document.getElementById("category");
+
+// Écoute le changement de la catégorie sélectionnée
 categorySelect.addEventListener("change", (event) => {
     selectedValue = event.target.value;
 });
 
-// écoute le titre de la photo
+// Écoute la saisie du titre de l'image
 titlePicture.addEventListener("input", function () {
     titleValue = titlePicture.value;
-})
+});
 
-
-
-
-// fonction qui défini si le formulaire est complet ou non 
-const imageForm = document.querySelector(".modal-form")
+// Sélection du formulaire et ajout d'un écouteur pour la soumission
+const imageForm = document.querySelector(".modal-form");
 imageForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
+    event.preventDefault(); // Empêche le rechargement de la page
 
+    // Vérifie si une image et un titre sont bien renseignés
     const validerImage = document.getElementById('preview-container').firstChild;
     if (!validerImage || !titleValue) {
         console.error("L'image ou le titre n'est pas valide.");
         return;
     }
 
-    // ajout de l'image
+    // Création d'un objet FormData pour envoyer l'image et les données du formulaire
     const formData = new FormData();
     if (file) {
         formData.append("image", file);
@@ -351,22 +330,18 @@ imageForm.addEventListener("submit", async (event) => {
         console.error("Aucun fichier sélectionné.");
     }
 
-    // ajout du titre
+    // Ajout du titre et de la catégorie au FormData
     formData.append("title", titleValue);
-    console.log("Titre : ", titleValue);
-
-    // ajout de la catégorie
     formData.append("category", selectedValue);
-    console.log("Catégorie : ", selectedValue);
 
-    // ajout du token
+    // Récupération du token de l'utilisateur
     const token = sessionStorage.authtoken;
     if (!token) {
         console.error("Token manquant.");
         return;
     }
 
-    // fetch de l'API ajouter une photo
+    // Requête API pour ajouter une photo
     try {
         const response = await fetch("http://localhost:5678/api/works", {
             method: "POST",
@@ -378,27 +353,26 @@ imageForm.addEventListener("submit", async (event) => {
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            console.error(`Erreur lors de la requête`);
+            console.error("Erreur lors de la requête");
             return;
         }
 
         const result = await response.json();
         console.log("Réponse réussie :", result);
 
-        // ajout de l'image dans la modale et la galerie
+        // Ajout de l'image à la galerie et la modale sans recharger la page
         addImageToDOM(result);
 
-        // reset de la modale "ajouter une photo"
+        // Réinitialisation du formulaire après l'ajout réussi
         imageForm.reset();
         previewContainer.innerHTML = "";
         document.querySelector(".file-display").style.display = "block";
-        // bouton valider
+
+        // Mise à jour du bouton valider
         validateForm();
 
-        // retourner à la première modale 
+        // Retour à la galerie et fermeture de la modale
         switchModal();
-        // fermeture de la modale après validation
         toggleModal();
 
     } catch (error) {
@@ -406,37 +380,32 @@ imageForm.addEventListener("submit", async (event) => {
     }
 });
 
-
-
-// fonction qui regroupe les images de la gallerie et la modale + supprimer la photo dans la modale sans raflraichir la page
+// Fonction pour ajouter l'image à la galerie et à la modale sans rechargement
 function addImageToDOM(data) {
     PhotoGallery(data);
     PhotoGalleryModal(data);
     SuppTrashCan();
 }
 
-
-
+// Sélection du bouton de validation du formulaire
 const submitButton = document.querySelector(".validate-photo");
 
-// focntion bouton valider vert quand le formulaire est complet
+// Fonction pour activer ou désactiver le bouton valider
 function validateForm() {
     const titleValue = titlePicture.value.trim();
     const selectedValue = categorySelect.value.trim();
     const hasImage = file && (file.type === "image/png" || file.type === "image/jpeg");
 
     if (titleValue && selectedValue && hasImage) {
-        // Activer et changer la couleur du bouton
-        submitButton.style.backgroundColor = "#1D6154"; // couleur vert
+        submitButton.style.backgroundColor = "#1D6154"; // Active le bouton en vert
         submitButton.disabled = false;
     } else {
-        // Désactiver et restaurer la couleur par défaut
-        submitButton.style.backgroundColor = "#ccc"; // couleur gris 
+        submitButton.style.backgroundColor = "#ccc"; // Désactive le bouton en gris
         submitButton.disabled = true;
     }
 }
 
-// Écouter les événements sur les champs du formulaire
+// Écoute des changements sur les champs du formulaire pour activer/désactiver le bouton
 titlePicture.addEventListener("input", validateForm);
 categorySelect.addEventListener("change", validateForm);
 fileInput.addEventListener("change", function (event) {
